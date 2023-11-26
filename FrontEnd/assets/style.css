@@ -62,6 +62,9 @@ header {
 section {
 	margin: 50px 0
 }
+a{
+	text-decoration: none;
+}
 
 h1{
 	display: flex;
@@ -69,21 +72,21 @@ h1{
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: #B1663C;
+	
 }
 
 h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
 }
 nav ul {
 	display: flex;
@@ -100,15 +103,11 @@ nav li a {
 	color: black;
 }
 
-nav li:active{
+li :hover{
 	font-weight: bold;
 }
 
-nav li:hover{
-	font-weight: bold;
-}
-
-li:hover {
+ footer li:hover {
 	color: #B1663C;
 }
 #introduction {
@@ -227,6 +226,9 @@ footer nav ul {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+#login-bold{
+	font-weight: bold;
+}
 #mainForm label {
 	margin: 20px 0px 0px 0px;
 	display: flex;
@@ -255,6 +257,11 @@ footer nav ul {
 	line-height: normal;
 	text-decoration-line: underline;
 }
+#container_error{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}  
 input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;

@@ -7,7 +7,7 @@
      * @param {object} data [Prototype] : reponse Json par l'API
      */
     function displayWorks (data){
-    //   console.log(data)
+    //console.log(data)
         deleteGallery()
         for (let key in data){ // on **itère** dans notre objet JSON pour récupérer les données
             // On récupère notre élément du **DOM**
@@ -26,7 +26,7 @@
         }
     }
 
-     /**DeleteGallery()
+    /**DeleteGallery()
       * Permet d'effacer la gallery de travaux
       */
     function deleteGallery(){
@@ -93,7 +93,6 @@
         })
     }
     colorNav()
-    
 
    /**GetApiResponse()
     * fonction asynchrone,appelle a l'API puis recupere la reponse et affiche les resultats
@@ -114,4 +113,22 @@
         }
     }
     getApiResponse("http://localhost:5678/api/works/")
+
+    /**Deconnect
+     * permet la deconnection de l'utilisateur au click
+     */
+    function deconnect() {
+        const login = document.querySelector(".login_logout")
+        //console.log(login)
+        if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
+            login.textContent = "Logout" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
+            // Ajout un ecouteur d'evenement au click 
+            login.addEventListener("click",(e)=>{
+                e.preventDefault()  // Empêche l'envoi par défaut du formulaire par le navigateur, l'envoi est géré par notre code JavaScript
+                localStorage.removeItem("token") // efface le token dans le LocaleStorage
+                window.location.href = "assets/logIn.html" // redigire vers la page logIn.html
+            })
+        }
+    }
+    deconnect()
 // })

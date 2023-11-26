@@ -15,7 +15,10 @@
     </head>
     <body>
         <header>
-            <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+            <a href="../../FrontEnd/index.html">
+                <h1>Sophie Bluel<span>Architecte d'intérieur</span></h1>
+            </a>
+            
             <nav>
                 <ul>
             <!-- Lien vers la section "projets" de la page d'accueil -->
@@ -28,7 +31,7 @@
                     </li>
             <!-- Lien vers la page de connexion -->
                     <li>
-                        <a href="../assets/logIn.html">login</a>
+                       <p id="login-bold">login</p> 
                     </li>
                     <li><img src="../assets/icons/instagram.png" alt="Instagram"></li>
                 </ul>
@@ -40,7 +43,9 @@
             <div id="container_form">
                 <form id="login-form" action="#" method="post">
                 <!-- Étiquette affichant les erreurs potentielles lors de la connexion -->
-                <label id="error"> </label>
+                <div id="container_error">
+                    <label id="error"> </label>
+                </div>
                 <!-- Étiquette pour l'adresse e-mail de l'utilisateur -->
                 <label for="email" class="titre">E-mail</label>
                 <input type="email" name="email" id="email" class="login" required />
