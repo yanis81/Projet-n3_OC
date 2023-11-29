@@ -49,15 +49,35 @@ table {
 }
 /** end reset css**/
 body {
-	max-width: 1140px;
-	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
-header {
+main{
+	max-width: 1140px;
+	margin:auto;
+}
+#header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	max-width: 1140px;
+	margin:50px auto;
+
+}
+#blackBar{
+	display: none;
+	gap: 10px;
+	justify-content: center;
+	align-items: center;
+	background-color: black;
+	color: #FFF;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	width: 100%;
+	height: 59px;
 }
 section {
 	margin: 50px 0
@@ -137,11 +157,25 @@ li :hover{
 	text-align: center;
 	margin-bottom: 1em;
 }
+#prj-mdf{
+	display: flex;
+	justify-content: center;
+	align-items: baseline;
+	gap: 25px;
+}
+#modifier{
+	display: none;
+	gap: 8px;
+	color: black;
+	font-size: 14px;
+	font-weight: 400;
+	text-decoration: none;
+}
 #btn{
 	display: flex;
 	justify-content: center;
 }
-button{
+.btn-flitre{
 	border-radius: 60px;
 	border: 1px solid #1D6154;
 	background: white;
@@ -154,6 +188,10 @@ button{
 	padding: 6px 20px;
 	margin-bottom: 40px;
 	margin-top: 25px;
+}
+.btn-flitre:hover{
+	background-color:#1D6154;
+	color:white;
 }
 
 .gallery {
@@ -204,6 +242,91 @@ footer nav ul {
 	justify-content: flex-end;
 	margin: 2em
 }
+/**************************** page Modal **************************** */
+.modal{
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	max-width: 100vw;
+ 	max-height: 100vh;
+}
+.modal-wrapper{
+	background-color: white;
+	width: 600px;
+	height: 600px;
+	overflow: hidden;
+	padding: 1px;
+  	border-radius: 10px;
+}
+/* bouton pour sortir de la page Modal */
+ #eject{
+	display: flex;
+	justify-content: flex-end;
+	background-color: #1D6154;
+	margin: 0;
+ }
+ .js-modal-close{
+	color: black;
+	font-size: 20px;
+	border: none;
+	background-color: white;
+	margin: 20px;
+ }
+/* Titre h3 Modal */
+#title-modal{
+	background-color: red;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: black;
+	font-size: 26px;
+	font-family: Work Sans;
+	font-weight: 400;
+	margin-bottom: 1px;
+}
+
+#gallery-modal {
+	display: grid;
+	padding: 0px;
+	align-items: center;
+	justify-content: center;
+	grid-template-columns: repeat(5, 1fr);
+	grid-gap: 15px;
+	border-bottom: 2px #B3B3B3 solid;
+}
+
+#gallery-modal img{
+	width: 100%;
+	height: 130px;
+}
+.fa-arrows-up-down-left-right,
+.fa-trash-can {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  background: black;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  margin: 5px;
+  border-radius: 6px;
+}
+.photo_model_efface {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	position: relative;
+  }
+
 /********************** page html logIn********************** */
 #mainForm {
 	width: 50%;
@@ -218,7 +341,6 @@ footer nav ul {
 	display: flex;
     justify-content: center;
 }
-
 .login {
 	width: 379px;
 	height: 51px;
@@ -282,4 +404,3 @@ input[type="submit"]{
 .footer_login{
 	margin-top: 130px;
 }
-

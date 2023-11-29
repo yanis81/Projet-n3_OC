@@ -21,7 +21,7 @@ form.addEventListener("submit", function (e) { // Écouteur d'événement pour l
         //console.log(data)
         if ( data.userId === 1){// Si UserId est egal à 1 , on est connecter alors tu stocke le Token et on vas vers index.html
             localStorage.setItem("token", data.token) // Ajout du token dans le LocaleStorage
-            console.log("Vous etes connecter !")
+            //console.log("Vous etes connecter !")
             window.location.href = "../index.html" // Redirige vers index.html
         } else {
             console.log("Une erreur est arriver lors de la connextion, veuillez reessayer !")

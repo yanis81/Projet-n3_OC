@@ -9,8 +9,8 @@
     function displayWorks (data){
     //console.log(data)
         deleteGallery()
-        for (let key in data){ // on **itère** dans notre objet JSON pour récupérer les données
-            // On récupère notre élément du **DOM**
+        for (let key in data){ // on itère dans notre objet JSON pour récupérer les données
+            // On récupère notre élément du DOM
             const gallery = document.querySelector(".gallery") 
             // On créer les éléments manquants au DOM
             const figureElement = document.createElement("figure")
@@ -19,7 +19,7 @@
             // On nourris les éléments précédements créer               
             imageElement.src = data[key].imageUrl              
             figcaptionElement.innerHTML = data[key].title
-            // On utilise le **siblings** pour ajouter les éléments fraichement créés au DOM
+            // On utilise le siblings pour ajouter les éléments fraichement créés au DOM
             gallery.appendChild(figureElement)
             figureElement.appendChild(imageElement)
             figureElement.appendChild(figcaptionElement)
@@ -69,7 +69,7 @@
         });
     }
 
-    /**ColorNav
+    /**ColorNav()
      * permet de changer le style des elements de navigation au click
      */
     function colorNav() {
@@ -114,7 +114,7 @@
     }
     getApiResponse("http://localhost:5678/api/works/")
 
-    /**Deconnect
+    /**Deconnect()
      * permet la deconnection de l'utilisateur au click
      */
     function deconnect() {
@@ -122,7 +122,8 @@
         //console.log(login)
         if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
             login.textContent = "Logout" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
-            // Ajout un ecouteur d'evenement au click 
+            console.log("Vous etes connecter !")
+            // Ajout un ecouteur d'evenement au click sur Login
             login.addEventListener("click",(e)=>{
                 e.preventDefault()  // Empêche l'envoi par défaut du formulaire par le navigateur, l'envoi est géré par notre code JavaScript
                 localStorage.removeItem("token") // efface le token dans le LocaleStorage
@@ -131,4 +132,132 @@
         }
     }
     deconnect()
+
+/* Je peux fusionner les deux function (deconnect et aspectConnect) j'attend de voir car les deux function on 
+    les memes condition de locale Storage */
+
+    /**AspectConnect()
+     * Permet de mettre en place la page html en mode edition 
+     */
+    function aspectConnect() {
+        const blackBar = document.getElementById("blackBar")
+        //console.log(blackBar)
+        const btnFiltres = document.getElementById("btn")
+        //console.log(btnFiltres)
+        const modifier = document.getElementById("modifier")
+        //console.log(modifier)
+        if (localStorage.getItem("token")) {
+            blackBar.setAttribute(`style`,`display: flex;`)
+            btnFiltres.setAttribute(`style`,`display: none`)
+            modifier.setAttribute(`style`,`display: flex;`)
+        }
+    }
+    aspectConnect()
+
+    //-------------------------------------MODAL-----------------------------------------//
+    let modal = null 
+
+    /**OpenModal()
+     * Permet d'ouvrir la page Modal en cliquant sur modifier
+     * @param {*} e 
+     */
+    const openModal = function (e) {
+        e.preventDefault()
+        const target = document.querySelector(e.target.getAttribute("href")) 
+        target.style.display = null
+        target.removeAttribute("aria-hidden")
+        target.setAttribute("aria_modal","true") 
+        modal = target 
+        modal.addEventListener("click", closeModal)
+        modal.querySelector(".js-modal-close").addEventListener("click", closeModal)
+        modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation)
+    }
+
+    /**CloseModal()
+     * Permet de quitter la page Modal et d'effacer sont code proprement 
+     * @param {*} e 
+     * @returns 
+     */
+    const closeModal = function (e) {
+        if (modal === null) return
+        e.preventDefault()
+        modal.style.display = "none"
+        modal.setAttribute("aria-hidden", "true")
+        modal.removeAttribute("aria-modale")
+        modal.removeEventListener("click", closeModal)
+        modal.querySelector(".js-modal-close").removeEventListener("click", closeModal)
+        modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation)
+        modal = null 
+    }
+
+    document.querySelectorAll(".js-modal").forEach(a =>{
+        a.addEventListener("click", openModal)
+    })
+
+    /**StopPropagation()
+     * Permet de cliquer dans la page Modal sans nous sortir de la page Modal (Stop la propagation de l'eventement)
+     * @param {*} e 
+     */
+    const stopPropagation = function (e) {
+        e.stopPropagation()
+    }
+
+    /**
+     * Ouvre la page Modal avec la touche "Enter" du clavier
+     */
+   /* window.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            openModal(e);
+        }
+    })*/
+
+    /**
+     * Quitte la page Modal en appuyant sur la touche "Echap" du clavier
+     */
+    window.addEventListener("keydown",function(e){
+        //console.log(e.key);
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            closeModal(e)
+        }
+    })
+
+    /**Photos()
+     * récupere les differents travaux de l'API (URL et ID) seulement 
+     * @param {*} works reponse Json par l'API 
+     */
+    function photos(works) {
+        const photo_modal = `
+            <figure id ="B${works.id}">
+        
+                <div id="repertoire_modal" class="photo_model_efface">
+                    <img src="${works?.imageUrl} "crossOrigin="anonymous">
+                    <i id ="${works.id}" class="fa-regular fa-trash-can "></i>
+                </div>
+                       
+            </figure>
+                `;
+    
+        document
+        .getElementById("gallery-modal")
+        .insertAdjacentHTML("beforeend", photo_modal);
+    }
+
+    /**AfficheModal()
+     * affiche la totalité des travaux dans la page Modal
+     * fonction de type asynchone
+     */
+    async function afficheModal() {
+    fetch("http://localhost:5678/api/works").then((res) => {
+        if (res.ok) {
+        res.json().then((data) => {
+            document.getElementById("gallery-modal").innerHTML = ""// Efface le HTML à l'intérieur de la modal
+            // Boucle à travers toutes les photos dans le tableau de données pour les afficher dans la modal
+            for (let i = 0; i <= data.length - 1; i++) {
+            photos(data[i]);
+            }
+        });
+        }
+    });
+    }
+    afficheModal()
 // })
