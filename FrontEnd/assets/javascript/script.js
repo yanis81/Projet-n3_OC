@@ -121,7 +121,7 @@
         const login = document.querySelector(".login_logout")
         //console.log(login)
         if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
-            login.textContent = "Logout" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
+            login.textContent = "Déconnexion" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
             console.log("Vous etes connecter !")
             // Ajout un ecouteur d'evenement au click sur Login
             login.addEventListener("click",(e)=>{
@@ -203,15 +203,6 @@
     }
 
     /**
-     * Ouvre la page Modal avec la touche "Enter" du clavier
-     */
-   /* window.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            openModal(e);
-        }
-    })*/
-
-    /**
      * Quitte la page Modal en appuyant sur la touche "Echap" du clavier
      */
     window.addEventListener("keydown",function(e){
@@ -227,24 +218,21 @@
      */
     function photos(works) {
         const photo_modal = `
-            <figure id ="B${works.id}">
-        
-                <div id="repertoire_modal" class="photo_model_efface">
-                    <img src="${works?.imageUrl} "crossOrigin="anonymous">
-                    <i id ="${works.id}" class="fa-regular fa-trash-can "></i>
-                </div>
-                       
-            </figure>
-                `;
+                <figure id ="B${works.id}">
+            
+                    <div id="repertoire_modal" class="photo_model_efface">
+                        <img src="${works?.imageUrl} "crossOrigin="anonymous">
+                        <i id ="${works.id}" <i class="fa-solid fa-trash-can"></i>
+                    </div>
+                        
+                </figure>`
     
-        document
-        .getElementById("gallery-modal")
-        .insertAdjacentHTML("beforeend", photo_modal);
+        document.getElementById("gallery-modal").insertAdjacentHTML("beforeend", photo_modal)
     }
 
     /**AfficheModal()
      * affiche la totalité des travaux dans la page Modal
-     * fonction de type asynchone
+     * fonction de type asynchrone
      */
     async function afficheModal() {
     fetch("http://localhost:5678/api/works").then((res) => {
@@ -255,7 +243,7 @@
             for (let i = 0; i <= data.length - 1; i++) {
             photos(data[i]);
             }
-        });
+        })
         }
     });
     }
