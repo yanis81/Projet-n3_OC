@@ -14,6 +14,7 @@
             const gallery = document.querySelector(".gallery") 
             // On créer les éléments manquants au DOM
             const figureElement = document.createElement("figure")
+            figureElement.classList.add(`js-travaux-${data[key].id}`) // Ajout d'une class a figureElement
             const imageElement = document.createElement("img")
             const figcaptionElement = document.createElement("figcaption")
             // On nourris les éléments précédements créer               
@@ -133,9 +134,6 @@
     }
     deconnect()
 
-/* Je peux fusionner les deux function (deconnect et aspectConnect) j'attend de voir car les deux function on 
-    les memes condition de locale Storage */
-
     /**AspectConnect()
      * Permet de mettre en place la page html en mode edition 
      */
@@ -155,6 +153,7 @@
     aspectConnect()
 
     //-------------------------------------MODAL-----------------------------------------//
+    
     let modal = null 
 
     /**OpenModal()
@@ -212,40 +211,118 @@
         }
     })
 
+
+    
     /**Photos()
      * récupere les differents travaux de l'API (URL et ID) seulement 
      * @param {*} works reponse Json par l'API 
      */
     function photos(works) {
         const photo_modal = `
-                <figure id ="B${works.id}">
+                <figure class ="T${works.id}">
             
                     <div id="repertoire_modal" class="photo_model_efface">
                         <img src="${works?.imageUrl} "crossOrigin="anonymous">
-                        <i id ="${works.id}" <i class="fa-solid fa-trash-can"></i>
+                        <p class="${works.id} js-delete-work">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </p>
                     </div>
                         
                 </figure>`
     
         document.getElementById("gallery-modal").insertAdjacentHTML("beforeend", photo_modal)
+        
     }
 
-    /**AfficheModal()
-     * affiche la totalité des travaux dans la page Modal
+        /**AfficheModal()
+         * affiche la totalité des travaux dans la page Modal
+         * fonction de type asynchrone
+         */
+        async function afficheModal() {
+            fetch("http://localhost:5678/api/works").then((res) => {
+                if (res.ok) {
+                    res.json().then((data) => {
+                        document.getElementById("gallery-modal").innerHTML = ""// Efface le HTML à l'intérieur de la modal
+                        // Boucle à travers toutes les photos dans le tableau de données pour les afficher dans la modal admin
+                        for (let i = 0; i <= data.length - 1; i++) {
+                            photos(data[i]);
+                        }
+                        deleteWork()//Appelle a la fonction deleteWork()
+                    })
+                }
+            })
+        }
+        
+    afficheModal() //Appelle a la fonction afficheModal()
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+////////////  SUPPRIMER  //////////////: 
+
+    // Récupération du token
+    const token = localStorage.getItem("token"); 
+    //console.log(token)
+    
+    /**DeleteWork()
+     * Event listener sur les boutons supprimer par rapport a leur ID
+     */
+    function deleteWork() {
+        let btnDelete = document.querySelectorAll(".js-delete-work") // recupere les bouton poubelle dans la modal
+        //console.log(btnDelete)
+        for (let i = 0; i < btnDelete.length; i++) {
+            btnDelete[i].addEventListener("click", deleteProjets)
+        }
+    }
+
+
+    /**DeleteProjets()
+     * supprime les travaux 
      * fonction de type asynchrone
      */
-    async function afficheModal() {
-    fetch("http://localhost:5678/api/works").then((res) => {
-        if (res.ok) {
-        res.json().then((data) => {
-            document.getElementById("gallery-modal").innerHTML = ""// Efface le HTML à l'intérieur de la modal
-            // Boucle à travers toutes les photos dans le tableau de données pour les afficher dans la modal
-            for (let i = 0; i <= data.length - 1; i++) {
-            photos(data[i]);
+    async function deleteProjets() {
+
+        //console.log("DEBUG DEBUT DE FUNCTION SUPRESSION")
+        //console.log(this.classList)
+        //console.log(token)
+
+        await fetch(`http://localhost:5678/api/works/${this.classList[0]}`,{ 
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}`},
+        })
+
+        .then (response => {
+            console.log(response)
+            // Token good
+            if  (response.status === 200){ 
+                console.log("DEBUG SUPPRESION DU PROJET " + this.classList[0])
+                refreshPage(this.classList[0])
+            }
+            // Token incorrect
+            else if (response.status === 401) {
+                alert("Vous n'êtes pas autorisé à supprimer ce projet, merci de vous connecter avec un compte valide")
+                window.location.href = "../logIn.html"
+            }
+            else if (response.status === 500) {
+                alert("un problème serveur est survenu, Merci de reessayer")
             }
         })
-        }
-    });
+        .catch (error => {
+            console.log(error)
+        })
     }
-    afficheModal()
+
+    /**RefreshPage()
+     * Rafraichit les travaux sans recharger la page
+     * fonction de type asynchrone
+     * @param {*} i 
+     */
+    async function refreshPage(i){
+        afficheModal() // Re lance une génération des travauxs dans la modale admin
+
+        // supprime le travaux de la page d'accueil
+        const travaux = document.querySelector(`.js-travaux-${i}`);
+        travaux.style.display = "none";
+    }
+
+    
 // })
