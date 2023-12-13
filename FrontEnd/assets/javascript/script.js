@@ -152,8 +152,8 @@
     }
     aspectConnect()
 
-    //-------------------------------------MODAL-----------------------------------------//
-    
+    //-----------------------------------------------------------------MODAL------------------------------------------------------------------------------//
+    //-----------Modal Admin-------------//
     let modal = null 
 
     /**OpenModal()
@@ -170,6 +170,7 @@
         modal.addEventListener("click", closeModal)
         modal.querySelector(".js-modal-close").addEventListener("click", closeModal)
         modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation)
+        document.querySelector(".js-modal-projet").addEventListener("click",openModaleProjet)
     }
 
     /**CloseModal()
@@ -208,11 +209,12 @@
         //console.log(e.key);
         if (e.key === 'Escape' || e.key === 'Esc') {
             closeModal(e)
+            closeModalProjet(e)
         }
     })
 
+      //--------------------------Ajout des travaux dans la modal---------------------------------//
 
-    
     /**Photos()
      * récupere les differents travaux de l'API (URL et ID) seulement 
      * @param {*} works reponse Json par l'API 
@@ -231,7 +233,6 @@
                 </figure>`
     
         document.getElementById("gallery-modal").insertAdjacentHTML("beforeend", photo_modal)
-        
     }
 
         /**AfficheModal()
@@ -255,9 +256,7 @@
         
     afficheModal() //Appelle a la fonction afficheModal()
 
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-////////////  SUPPRIMER  //////////////: 
+    //---------------------------------suppression des travaux dans la modale--------------------------------------------//
 
     // Récupération du token
     const token = localStorage.getItem("token"); 
@@ -274,13 +273,12 @@
         }
     }
 
-
     /**DeleteProjets()
      * supprime les travaux 
      * fonction de type asynchrone
      */
     async function deleteProjets() {
-
+        
         //console.log("DEBUG DEBUT DE FUNCTION SUPRESSION")
         //console.log(this.classList)
         //console.log(token)
@@ -324,5 +322,118 @@
         travaux.style.display = "none";
     }
 
+    //------------------------------------------------Modal Ajout de travaux----------------------------------------//
+
+    let modalProjet = null
+
+    /**openModaleProjet
+     * Ouvre la page Modal Projet
+     * @param {*} e 
+     */
+    const openModaleProjet = function(e) {
+        e.preventDefault()
+        modalProjet = document.querySelector(e.target.getAttribute("href"))
+
+        modalProjet.style.display = null
+        modalProjet.removeAttribute("aria-hidden")
+        modalProjet.setAttribute("aria-modal", "true")
+
+        // Apl fermeture modale
+        modalProjet.addEventListener("click", closeModalProjet)
+        modalProjet.querySelector(".js-modal-close").addEventListener("click", closeModalProjet)
+        modalProjet.querySelector(".js-modal-stop").addEventListener("click", stopPropagation)
+
+        modalProjet.querySelector(".js-modal-return").addEventListener("click", backToModal)
+    }
+
+    /**closeModalProjet()
+     * Ferme la page Modal Projet
+     * @param {*} e 
+     * @returns 
+     */
+    const closeModalProjet = function(e) {
+        if (modalProjet === null) return
+
+        modalProjet.setAttribute("aria-hidden", "true")
+        modalProjet.removeAttribute("aria-modal")
+
+        modalProjet.querySelector(".js-modale-close").removeEventListener("click", closeModalProjet)
+        modalProjet.querySelector(".js-modale-stop").removeEventListener("click", stopPropagation)
+
+        modalProjet.style.display = "none"
+        modalProjet = null
+        
+        closeModal(e)
+    }
+
+    /**backToModal
+     * retourne a la page Modal Admin
+     * @param {*} e 
+     */
+    const backToModal = function(e) {
+        e.preventDefault()
+        
+        modalProjet.style.display = "none"
+        modalProjet = null
+        openModal()
+    }
+
+    //--------------ajout des travaux-----------//
+
+    const btnAjouterProjet = document.querySelector(".js-add-work")
+    btnAjouterProjet.addEventListener("click", addWork)
+    
+    /**AddWork
+     * Ajoute les travaux via l'API 
+     * @param {*} event 
+     * @returns 
+     */
+    async function addWork(e) {
+        e.preventDefault();
+
+        const title = document.querySelector(".js-title").value
+        //console.log(title)
+        const categoryId = document.querySelector(".js-categoryId").value
+        //console.log(categoryId)
+        const image = document.querySelector(".js-image").files[0]
+        //console.log(image)
+
+        if (title === "" || categoryId === "" || image === undefined) {
+            alert("Merci de remplir tous les champs")
+            return
+        } else if (categoryId !== "1" && categoryId !== "2" && categoryId !== "3") {
+            alert("Merci de choisir une catégorie valide")
+            return
+        } else {
+            try {
+                const formData = new FormData()
+                formData.append("title", title)
+                formData.append("category", categoryId)
+                formData.append("image", image)
+
+                const response = await fetch("http://localhost:5678/api/works", {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                })
+
+                if (response.status === 201) {
+                    alert("Travaux ajouté avec succès !")
+                } else if (response.status === 400) {
+                    alert("Merci de remplir tous les champs")
+                } else if (response.status === 500) {
+                    alert("Erreur serveur");
+                } else if (response.status === 401) {
+                    alert("Vous n'êtes pas autorisé à ajouter un projet")
+                    window.location.href = "../logIn.html"
+                }
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }
     
 // })
