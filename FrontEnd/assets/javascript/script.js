@@ -1,13 +1,12 @@
 
 // document.addEventListener("DOMContentLoaded", () => { //// effectue la meme tache que defer dans l'html
-    // console.log("DOM fully loaded and parsed")
+    
     
     /**DisplayWorks()
      *  Permet d'integrer les travaux dynamiquement dans gallery
      * @param {object} data [Prototype] : reponse Json par l'API
      */
     function displayWorks (data){
-    //console.log(data)
         deleteGallery()
         for (let key in data){ // on itère dans notre objet JSON pour récupérer les données
             // On récupère notre élément du DOM
@@ -41,19 +40,15 @@
      */
     function fctFiltre(buttons,data){
         const btn = document.querySelectorAll(buttons)//recuperer TOUS les boutons du html et pas seulement le 1er element
-       //console.log(btn)
         btn.forEach(element => { // Boucle forEach, permet d'exécuter une fonction donnée sur chaque élément du tableau.
             element.addEventListener("click",(e)=>{ //Ajout d'un ecouteur d'evenement pour chaque bouton du tableau
                 let catId = Number(e.currentTarget.dataset.catId) // convertion de la valeur de l'attribut data-catId String en Number
                 let btnId = e.currentTarget.id // ID du bouton qui est cliquer 
                 for (let i = 0; i < btn.length ; i++){ // parcours mon tableau qui contient les boutons 
-                    console.log(catId)
                     if (btnId === btn[i].id){ // Si l'ID du bouton cliquer est egal a l'ID du bouton qu'on compare alors on change la couleur de fond et de texte
-                       // console.log("if")
                         e.currentTarget.setAttribute(`style`,`background-color:#1D6154 ;color:white`)
                         
                     }else{// Sinon on enleve l'attibut style , qui remet le bouton par defaut 
-                        // console.log("else")
                         btn[i].removeAttribute("style")
                     }
                 }
@@ -64,7 +59,6 @@
                 const worksFiltered = data.filter((data)=>{
                     return data.categoryId === catId
                 })
-                 //console.log(worksFiltered);
                 displayWorks(worksFiltered)
             })
         });
@@ -75,18 +69,13 @@
      */
     function colorNav() {
         const nav = document.querySelectorAll("li") // Recuperer tous les elements li du HTMl et les rentrent dans un tableau JS.
-        //console.log(nav )
         nav.forEach(element =>{ // Boucle forEach, permet d'exécuter une fonction donnée sur chaque élément du tableau.
             element.addEventListener('click',(e)=>{ //Ajout d'un ecouteur d'evenement pour chaque elements du tableau.
                 navInnerText = e.currentTarget.innerText // Recuperer l'InnerText de l'elements qui est cliquer.
-                // console.log(navInnerText)
                 for(let i = 0 ; i < nav.length ; i++){ //Parcours mon tableau qui contient les elements.
                     if ( navInnerText === nav[i].innerText){ //Si l'InnerText de l'element cliquer et le meme que l'InnerText de l'element du tableau alors on change le style.
-                        // console.log("if")
-                        //console.log(nav[i].innerText)
                         e.currentTarget.setAttribute(`style`,`font-weight: bold;`)
                     }else{ //Sinon on restore le style par defaut.
-                        //console.log("else")
                         nav[i].removeAttribute(`style`)  
                     }
                 }       
@@ -104,13 +93,12 @@
             fetch(url)
                 .then( response => response.json() )
                 .then((response) => {
-                    // console.log(response)
                     displayWorks(response)
                     fctFiltre("button[id^='btn_']",response) //selecteur css pour preciser un button 
                 })
                 .catch( (error) => console.log("Erreur : "+error))            
         }catch{
-            console.log("Erreur : "+response.error)
+            alert(("Erreur : "+ response.error))
         }
     }
     getApiResponse("http://localhost:5678/api/works/")
@@ -120,7 +108,6 @@
      */
     function deconnect() {
         const login = document.querySelector(".login_logout")
-        //console.log(login)
         if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
             login.textContent = "Déconnexion" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
             console.log("Vous etes connecter !")
@@ -139,11 +126,8 @@
      */
     function aspectConnect() {
         const blackBar = document.getElementById("blackBar")
-        //console.log(blackBar)
         const btnFiltres = document.getElementById("btn")
-        //console.log(btnFiltres)
         const modifier = document.getElementById("modifier")
-        //console.log(modifier)
         if (localStorage.getItem("token")) {
             blackBar.setAttribute(`style`,`display: flex;`)
             btnFiltres.setAttribute(`style`,`display: none`)
@@ -175,7 +159,7 @@
 
     /**CloseModal()
      * Permet de quitter la page Modal et d'effacer sont code proprement 
-     * @param {*} e 
+     * @param {*} e
      * @returns 
      */
     const closeModal = function (e) {
@@ -206,7 +190,6 @@
      * Quitte la page Modal en appuyant sur la touche "Echap" du clavier
      */
     window.addEventListener("keydown",function(e){
-        //console.log(e.key);
         if (e.key === 'Escape' || e.key === 'Esc') {
             closeModal(e)
             closeModalProjet(e)
@@ -260,14 +243,12 @@
 
     // Récupération du token
     const token = localStorage.getItem("token"); 
-    //console.log(token)
     
     /**DeleteWork()
      * Event listener sur les boutons supprimer par rapport a leur ID
      */
     function deleteWork() {
         let btnDelete = document.querySelectorAll(".js-delete-work") // recupere les bouton poubelle dans la modal
-        //console.log(btnDelete)
         for (let i = 0; i < btnDelete.length; i++) {
             btnDelete[i].addEventListener("click", deleteProjets)
         }
@@ -279,20 +260,15 @@
      */
     async function deleteProjets() {
         
-        //console.log("DEBUG DEBUT DE FUNCTION SUPRESSION")
-        //console.log(this.classList)
-        //console.log(token)
-
-        await fetch(`http://localhost:5678/api/works/${this.classList[0]}`,{ 
+          await fetch(`http://localhost:5678/api/works/${this.classList[0]}`,{ 
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}`},
         })
 
         .then (response => {
-            console.log(response)
             // Token good
             if  (response.status === 200){ 
-                console.log("DEBUG SUPPRESION DU PROJET " + this.classList[0])
+               
                 refreshPage(this.classList[0])
             }
             // Token incorrect
@@ -305,7 +281,7 @@
             }
         })
         .catch (error => {
-            console.log(error)
+            alert("Erreur"+ error)
         })
     }
 
@@ -378,6 +354,30 @@
         openModal()
     }
 
+    //-------Image selectionnée----------//
+
+    /**Telecharger
+     * Affiche une vignette de l'image selectionner
+     */
+    function telecharger() {
+        let telecharger_image = ""
+        const reader = new FileReader()
+    
+        // Ajoute un écouteur d'événements pour charger l'image
+        reader.addEventListener("load", () => {
+          telecharger_image = reader.result;
+          const photo = document.getElementById("image_telecharger")
+          document.getElementById("image_telecharger_images").style.display = null
+    
+          photo.style.backgroundImage = `url(${telecharger_image} )`
+        })
+    
+        reader.readAsDataURL(this.files[0])
+      }
+    
+      // Ajoute un écouteur d'événements pour télécharger les photos
+      document.getElementById("photo").addEventListener("change", telecharger)
+
     //--------------ajout des travaux-----------//
 
     const btnAjouterProjet = document.querySelector(".js-add-work")
@@ -392,11 +392,8 @@
         e.preventDefault();
 
         const title = document.querySelector(".js-title").value
-        //console.log(title)
         const categoryId = document.querySelector(".js-categoryId").value
-        //console.log(categoryId)
         const image = document.querySelector(".js-image").files[0]
-        //console.log(image)
 
         if (title === "" || categoryId === "" || image === undefined) {
             alert("Merci de remplir tous les champs")
@@ -431,7 +428,7 @@
                 }
             }
             catch (error) {
-                console.log(error)
+               alert("erreur:"+error)
             }
         }
     }

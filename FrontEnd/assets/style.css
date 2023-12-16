@@ -424,6 +424,22 @@ max-height: 100vh;
 .form-group-photo input{
 	display: none;
 }
+/* image telecharger */
+#container-photo{
+	position: relative;
+}
+#image_telecharger_images {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 200px;
+}
+#image_telecharger {
+	width: 33%;
+	height: 100%;
+	background-size: cover;
+}
 
 /* titre */
 .form-group-title{
@@ -549,9 +565,4 @@ max-height: 100vh;
 	display: flex;
 	justify-content: center;
 	width: 379px;
-}
-.footer_login{
-	/* margin-top: 130px; */
-	display: flex;
-	justify-content:flex-end ;
 }

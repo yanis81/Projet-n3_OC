@@ -81,11 +81,21 @@
 			<!-- formulaire d'envoie du travaux -->
 			<form class="modal-projet-form" action="" enctype="multipart/form-data">
 				<!-- Photo -->
-				<div class="form-group-photo">
-					<i class="fa-regular fa-image"></i>
-					<label for="photo">+ Ajouter une photo</label>
-					<input type="file" name="photo" id="photo" class="js-image">
-					<p>jpg, png : 4mo max</p>
+				<div id="container-photo">
+					<!-- Images Telecharger -->
+					<div id="image_telecharger_images" style="display: none">
+						<div id="image_telecharger">
+							<!-- photo telecharger -->
+						</div>
+					</div>
+
+					<!--Formulaire de Photo -->
+					<div class="form-group-photo">
+						<i class="fa-regular fa-image"></i>
+						<label for="photo">+ Ajouter une photo</label>
+						<input accept="image/png, image/jpeg" type="file" name="photo" id="photo" class="js-image" value="">
+						<p>jpg, png : 4mo max</p>
+					</div>
 				</div>
 				<!-- Titre -->
 				<div class="form-group-title">
