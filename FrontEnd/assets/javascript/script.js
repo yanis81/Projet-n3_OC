@@ -107,31 +107,40 @@
      * permet la deconnection de l'utilisateur au click
      */
     function deconnect() {
-        const login = document.querySelector(".login_logout")
-        if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
-            login.textContent = "Déconnexion" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
-            console.log("Vous etes connecter !")
-            // Ajout un ecouteur d'evenement au click sur Login
-            login.addEventListener("click",(e)=>{
-                e.preventDefault()  // Empêche l'envoi par défaut du formulaire par le navigateur, l'envoi est géré par notre code JavaScript
-                localStorage.removeItem("token") // efface le token dans le LocaleStorage
-                window.location.href = "assets/logIn.html" // redigire vers la page logIn.html
-            })
+        try {
+            const login = document.querySelector(".login_logout")
+            if (localStorage.getItem("token")) { //Si le token est enregistrer dans le LocaleStorage alors 
+                login.textContent = "Déconnexion" // change le texte Login par Logout si le token est enregistrer dans LocaleStorage 
+                console.log("Vous etes connecter !")
+                // Ajout un ecouteur d'evenement au click sur Login
+                login.addEventListener("click",(e)=>{
+                    e.preventDefault()  // Empêche l'envoi par défaut du formulaire par le navigateur, l'envoi est géré par notre code JavaScript
+                    localStorage.removeItem("token") // efface le token dans le LocaleStorage
+                    window.location.href = "assets/logIn.html" // redigire vers la page logIn.html
+                })
+            }
+        } catch (error) {
+            alert("erreur:"+error)  
         }
     }
+
     deconnect()
 
     /**AspectConnect()
      * Permet de mettre en place la page html en mode edition 
      */
     function aspectConnect() {
-        const blackBar = document.getElementById("blackBar")
-        const btnFiltres = document.getElementById("btn")
-        const modifier = document.getElementById("modifier")
-        if (localStorage.getItem("token")) {
+        try {
+            const blackBar = document.getElementById("blackBar")
+            const btnFiltres = document.getElementById("btn")
+            const modifier = document.getElementById("modifier")
+            if (localStorage.getItem("token")) {
             blackBar.setAttribute(`style`,`display: flex;`)
             btnFiltres.setAttribute(`style`,`display: none`)
             modifier.setAttribute(`style`,`display: flex;`)
+            }
+        } catch (error) {
+            alert("erreur:"+ error)
         }
     }
     aspectConnect()
@@ -190,10 +199,15 @@
      * Quitte la page Modal en appuyant sur la touche "Echap" du clavier
      */
     window.addEventListener("keydown",function(e){
-        if (e.key === 'Escape' || e.key === 'Esc') {
+        try {
+            if (e.key === 'Escape' || e.key === 'Esc') {
             closeModal(e)
             closeModalProjet(e)
+            }
+        } catch (error) {
+            alert("erreur:"+error)
         }
+        
     })
 
       //--------------------------Ajout des travaux dans la modal---------------------------------//
@@ -218,11 +232,12 @@
         document.getElementById("gallery-modal").insertAdjacentHTML("beforeend", photo_modal)
     }
 
-        /**AfficheModal()
-         * affiche la totalité des travaux dans la page Modal
-         * fonction de type asynchrone
-         */
-        async function afficheModal() {
+    /**AfficheModal()
+     * affiche la totalité des travaux dans la page Modal
+     * fonction de type asynchrone
+     */
+    async function afficheModal() {
+        try {
             fetch("http://localhost:5678/api/works").then((res) => {
                 if (res.ok) {
                     res.json().then((data) => {
@@ -235,23 +250,30 @@
                     })
                 }
             })
+        } catch (error) {
+            alert("erreur:"+error)
         }
+    }
         
     afficheModal() //Appelle a la fonction afficheModal()
 
     //---------------------------------suppression des travaux dans la modale--------------------------------------------//
 
     // Récupération du token
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token")
     
     /**DeleteWork()
      * Event listener sur les boutons supprimer par rapport a leur ID
      */
     function deleteWork() {
-        let btnDelete = document.querySelectorAll(".js-delete-work") // recupere les bouton poubelle dans la modal
-        for (let i = 0; i < btnDelete.length; i++) {
-            btnDelete[i].addEventListener("click", deleteProjets)
-        }
+        try {
+            let btnDelete = document.querySelectorAll(".js-delete-work") // recupere les bouton poubelle dans la modal
+            for (let i = 0; i < btnDelete.length; i++) {
+                btnDelete[i].addEventListener("click", deleteProjets)
+            } 
+        } catch (error) {
+            alert("erreur:"+error)
+        } 
     }
 
     /**DeleteProjets()
@@ -268,7 +290,6 @@
         .then (response => {
             // Token good
             if  (response.status === 200){ 
-               
                 refreshPage(this.classList[0])
             }
             // Token incorrect
@@ -291,11 +312,14 @@
      * @param {*} i 
      */
     async function refreshPage(i){
-        afficheModal() // Re lance une génération des travauxs dans la modale admin
-
-        // supprime le travaux de la page d'accueil
-        const travaux = document.querySelector(`.js-travaux-${i}`);
-        travaux.style.display = "none";
+        try {
+            afficheModal() // Re lance une génération des travauxs dans la modale admin
+            // supprime le travaux de la page d'accueil
+            const travaux = document.querySelector(`.js-travaux-${i}`)
+            travaux.style.display = "none"
+        } catch (error) {
+            alert("erreur:"+error)
+        }
     }
 
     //------------------------------------------------Modal Ajout de travaux----------------------------------------//
@@ -333,9 +357,6 @@
         modalProjet.setAttribute("aria-hidden", "true")
         modalProjet.removeAttribute("aria-modal")
 
-        modalProjet.querySelector(".js-modale-close").removeEventListener("click", closeModalProjet)
-        modalProjet.querySelector(".js-modale-stop").removeEventListener("click", stopPropagation)
-
         modalProjet.style.display = "none"
         modalProjet = null
         
@@ -351,32 +372,35 @@
         
         modalProjet.style.display = "none"
         modalProjet = null
-        openModal()
     }
 
-    //-------Image selectionnée----------//
+    //-------Image selectionnée--------//
 
     /**Telecharger
      * Affiche une vignette de l'image selectionner
      */
     function telecharger() {
-        let telecharger_image = ""
-        const reader = new FileReader()
+        try {
+            let telecharger_image = ""
+            const reader = new FileReader()
     
-        // Ajoute un écouteur d'événements pour charger l'image
-        reader.addEventListener("load", () => {
-          telecharger_image = reader.result;
-          const photo = document.getElementById("image_telecharger")
-          document.getElementById("image_telecharger_images").style.display = null
+            // Ajoute un écouteur d'événements pour charger l'image
+            reader.addEventListener("load", () => {
+                telecharger_image = reader.result;
+                const photo = document.getElementById("image_telecharger")
+                document.getElementById("image_telecharger_images").style.display = null
     
-          photo.style.backgroundImage = `url(${telecharger_image} )`
-        })
+                photo.style.backgroundImage = `url(${telecharger_image} )`
+            })
     
-        reader.readAsDataURL(this.files[0])
-      }
+            reader.readAsDataURL(this.files[0])
+        } catch (error) {
+            alert("erreur:"+error)
+        }
+    }
     
-      // Ajoute un écouteur d'événements pour télécharger les photos
-      document.getElementById("photo").addEventListener("change", telecharger)
+    // Ajoute un écouteur d'événements pour télécharger les photos
+    document.getElementById("photo").addEventListener("change", telecharger)
 
     //--------------ajout des travaux-----------//
 
@@ -389,7 +413,7 @@
      * @returns 
      */
     async function addWork(e) {
-        e.preventDefault();
+        e.preventDefault()
 
         const title = document.querySelector(".js-title").value
         const categoryId = document.querySelector(".js-categoryId").value
