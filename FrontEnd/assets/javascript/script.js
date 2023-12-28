@@ -90,18 +90,18 @@
     */
     async function getApiResponse (url){        
         try{
-            fetch(url)
+            fetch(url) // Requete GET par defauts
                 .then( response => response.json() )
                 .then((response) => {
-                    displayWorks(response)
-                    fctFiltre("button[id^='btn_']",response) //selecteur css pour preciser un button 
+                    displayWorks(response) // Appelle la fonction displayWorks
+                    fctFiltre("button[id^='btn_']",response) // appelle de la fonction fctFiltre + selecteur css pour preciser un button 
                 })
                 .catch( (error) => console.log("Erreur : "+error))            
         }catch{
             alert(("Erreur : "+ response.error))
         }
     }
-    getApiResponse("http://localhost:5678/api/works/")
+    getApiResponse("http://localhost:5678/api/works/") // Appelle la fonction getApiResponse avec l'URL de l'API pour recuperer les travaux dynamiquement
 
     /**Deconnect()
      * permet la deconnection de l'utilisateur au click
@@ -145,7 +145,7 @@
     }
     aspectConnect()
 
-    //-----------------------------------------------------------------MODAL------------------------------------------------------------------------------//
+    //-------------------------------------------------------------------------MODAL------------------------------------------------------------------------------//
     //-----------Modal Admin-------------//
     let modal = null 
 
@@ -257,7 +257,7 @@
         
     afficheModal() //Appelle a la fonction afficheModal()
 
-    //---------------------------------suppression des travaux dans la modale--------------------------------------------//
+    //------------------------------suppression des travaux dans la modale-------------------------------//
 
     // Récupération du token
     const token = localStorage.getItem("token")
@@ -267,9 +267,9 @@
      */
     function deleteWork() {
         try {
-            let btnDelete = document.querySelectorAll(".js-delete-work") // recupere les bouton poubelle dans la modal
+            let btnDelete = document.querySelectorAll(".js-delete-work") // recupere tous les boutons poubelle dans la modal admin
             for (let i = 0; i < btnDelete.length; i++) {
-                btnDelete[i].addEventListener("click", deleteProjets)
+                btnDelete[i].addEventListener("click", deleteProjets) //joue deleteProjets quand on click sur un btnDelete
             } 
         } catch (error) {
             alert("erreur:"+error)
@@ -282,7 +282,7 @@
      */
     async function deleteProjets() {
         
-          await fetch(`http://localhost:5678/api/works/${this.classList[0]}`,{ 
+        await fetch(`http://localhost:5678/api/works/${this.classList[0]}`,{ 
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}`},
         })
@@ -295,7 +295,7 @@
             // Token incorrect
             else if (response.status === 401) {
                 alert("Vous n'êtes pas autorisé à supprimer ce projet, merci de vous connecter avec un compte valide")
-                window.location.href = "../logIn.html"
+                window.location.href = "assets/logIn.html"
             }
             else if (response.status === 500) {
                 alert("un problème serveur est survenu, Merci de reessayer")
@@ -415,38 +415,38 @@
     async function addWork(e) {
         e.preventDefault()
 
-        const title = document.querySelector(".js-title").value
-        const categoryId = document.querySelector(".js-categoryId").value
-        const image = document.querySelector(".js-image").files[0]
+        const title = document.querySelector(".js-title").value //recupere la valeur de champ titre et le rentre dans la constante title
+        const categoryId = document.querySelector(".js-categoryId").value //recupere l'ID d'une des trois categories selectionner et le rentre dans la constante caterogyID
+        const image = document.querySelector(".js-image").files[0] //recupere l'image selectionner et le rentre dans la constante image
 
-        if (title === "" || categoryId === "" || image === undefined) {
+        if (title === "" || categoryId === "" || image === undefined) { // Si un des trois champs est manquant alors un envoi une alert 
             alert("Merci de remplir tous les champs")
             return
-        } else if (categoryId !== "1" && categoryId !== "2" && categoryId !== "3") {
+        } else if (categoryId !== "1" && categoryId !== "2" && categoryId !== "3") { // Si une autre categorie est selectionner alors on envoi une alert
             alert("Merci de choisir une catégorie valide")
             return
-        } else {
+        } else { 
             try {
-                const formData = new FormData()
-                formData.append("title", title)
+                const formData = new FormData() // Creation de la fonction FormData et on y accorche les valeurs recuperer precedemment
+                formData.append("title", title) 
                 formData.append("category", categoryId)
                 formData.append("image", image)
 
-                const response = await fetch("http://localhost:5678/api/works", {
-                    method: "POST",
+                const response = await fetch("http://localhost:5678/api/works", {  // Fonction fetch pour envoyer les nouveaux travaux 
+                    method: "POST", // Requete POST pour envoyer le nouveau travail
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                    body: formData,
+                    body: formData, // Formdata en corps de l'API
                 })
 
-                if (response.status === 201) {
+                if (response.status === 201) { // Travail ajouté avec succès 
                     alert("Travaux ajouté avec succès !")
-                } else if (response.status === 400) {
+                } else if (response.status === 400) { // champs manquant 
                     alert("Merci de remplir tous les champs")
-                } else if (response.status === 500) {
+                } else if (response.status === 500) { // Serveur non fontionnelle 
                     alert("Erreur serveur");
-                } else if (response.status === 401) {
+                } else if (response.status === 401) { // Non autorisation de poster un nouveau travail 
                     alert("Vous n'êtes pas autorisé à ajouter un projet")
                     window.location.href = "../logIn.html"
                 }

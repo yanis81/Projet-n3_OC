@@ -242,7 +242,7 @@ footer nav ul {
 	justify-content: flex-end;
 	margin: 2em
 }
-/**************************** page Modal Admin **************************** */
+/******************************************* page Modal Admin ****************************************************** */
 .modal{
 	position: fixed;
 	display: flex;
@@ -348,7 +348,7 @@ footer nav ul {
 	padding: 6px 20px;font-weight: 700;
 	font-family: 'Syne';
 }
-/**************************** page Modal Travaux **************************** */
+/********************************* page Modal Travaux ************************************ */
 
 /* mise en page Modal Travaux */
 .modal-projet{
@@ -406,7 +406,7 @@ max-height: 100vh;
 	font-size: 85px;
 	color: #CBD6DC;
 }
-.form-group-photo label{
+#label-photo{
 	display: flex;
 	justify-content: center;
 	width: 30%;
@@ -417,7 +417,7 @@ max-height: 100vh;
 	font-size: 14px;
 	font-weight:500;
 }
-.form-group-photo label :hover{
+#label-photo:hover{
 	color:#CBD6DC ;
 	background-color:#306685 ;
 }
