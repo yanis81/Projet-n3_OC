@@ -446,7 +446,8 @@
 
                 if (response.status === 201) { // Travail ajouté avec succès 
                     alert("Travaux ajouté avec succès !")
-                    //displayWorks()
+                    getApiResponse("http://localhost:5678/api/works/") // Recharge la page avec le nouveau travail poster
+                    closeModalProjet({preventDefault: () => true}) // ferme les pages modals 
                 } else if (response.status === 400) { // champs manquant 
                     alert("Merci de remplir tous les champs")
                 } else if (response.status === 500) { // Serveur non fontionnelle 
@@ -457,7 +458,7 @@
                 }
             }
             catch (error) {
-               alert("erreur:"+error)
+               alert("erreur:" + error)
             }
         }
     }
