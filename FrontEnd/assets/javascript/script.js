@@ -29,9 +29,13 @@
     /**DeleteGallery()
       * Permet d'effacer la gallery de travaux
       */
-    function deleteGallery(){
-        document.querySelector(".gallery").innerHTML = ""
+    function deleteGallery() {
+        const gallery = document.querySelector(".gallery");
+        while (gallery.firstChild) {
+            gallery.removeChild(gallery.firstChild);
+        }
     }
+    
 
     /**FctFiltre()
      * permet de filtrer les travaux et de changer la couleur des boutons au click
@@ -289,8 +293,8 @@
 
         .then (response => {
             // Token good
-            if  (response.status === 200){ 
-                refreshPage(this.classList[0])
+            if  (response.status === 204){  
+                refreshPage(this.classList[0]) 
             }
             // Token incorrect
             else if (response.status === 401) {
@@ -377,7 +381,7 @@
     //-------Image selectionnée--------//
 
     /**Telecharger
-     * Affiche une vignette de l'image selectionner
+     * Affiche une vignette de l'image selectionner a l'ajout d'un nouveau travail
      */
     function telecharger() {
         try {
@@ -442,13 +446,14 @@
 
                 if (response.status === 201) { // Travail ajouté avec succès 
                     alert("Travaux ajouté avec succès !")
+                    //displayWorks()
                 } else if (response.status === 400) { // champs manquant 
                     alert("Merci de remplir tous les champs")
                 } else if (response.status === 500) { // Serveur non fontionnelle 
                     alert("Erreur serveur");
                 } else if (response.status === 401) { // Non autorisation de poster un nouveau travail 
                     alert("Vous n'êtes pas autorisé à ajouter un projet")
-                    window.location.href = "../logIn.html"
+                    window.location.href = "assets/logIn.html"
                 }
             }
             catch (error) {
