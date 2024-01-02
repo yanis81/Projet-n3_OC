@@ -1,6 +1,30 @@
 
 // document.addEventListener("DOMContentLoaded", () => { //// effectue la meme tache que defer dans l'html
-    
+    let objWorks = []
+    document.addEventListener("click",(e)=>{ // Optimisation des ressources et geres les données de l'API pour les boutons de filtres
+        let clickElement = e.target //recupere l'element clicker
+        let clickId = clickElement.id //recupere l'attribut ID de l'element clicker
+        switch (clickId) { 
+            case "btn_tous":
+                fctFiltre(clickElement,0)
+                break
+
+            case "btn_objet":
+                fctFiltre(clickElement,1)
+                break
+
+            case "btn_appartement":
+                fctFiltre(clickElement,2)
+                break
+
+            case "btn_hotelrestaurant":
+                fctFiltre(clickElement,3)
+                break
+                
+            default :
+                break
+        }
+    })
     
     /**DisplayWorks()
      *  Permet d'integrer les travaux dynamiquement dans gallery
@@ -36,36 +60,30 @@
         }
     }
     
-
-    /**FctFiltre()
-     * permet de filtrer les travaux et de changer la couleur des boutons au click
-     * @param {CSSselector} buttons aaray contenant ....
-     * @param {Object} data objet contenant la reponse de l'API
-     */
-    function fctFiltre(buttons,data){
-        const btn = document.querySelectorAll(buttons)//recuperer TOUS les boutons du html et pas seulement le 1er element
-        btn.forEach(element => { // Boucle forEach, permet d'exécuter une fonction donnée sur chaque élément du tableau.
-            element.addEventListener("click",(e)=>{ //Ajout d'un ecouteur d'evenement pour chaque bouton du tableau
-                let catId = Number(e.currentTarget.dataset.catId) // convertion de la valeur de l'attribut data-catId String en Number
-                let btnId = e.currentTarget.id // ID du bouton qui est cliquer 
-                for (let i = 0; i < btn.length ; i++){ // parcours mon tableau qui contient les boutons 
-                    if (btnId === btn[i].id){ // Si l'ID du bouton cliquer est egal a l'ID du bouton qu'on compare alors on change la couleur de fond et de texte
-                        e.currentTarget.setAttribute(`style`,`background-color:#1D6154 ;color:white`)
-                        
-                    }else{// Sinon on enleve l'attibut style , qui remet le bouton par defaut 
-                        btn[i].removeAttribute("style")
-                    }
-                }
-                if(catId === 0){ 
-                    displayWorks(data)
-                    return false
-                }
-                const worksFiltered = data.filter((data)=>{
-                    return data.categoryId === catId
-                })
-                displayWorks(worksFiltered)
-            })
-        });
+   /**fctFiltre
+    * permet de filtrer et de changer la couleur des differents filtres
+    * @param {*} elem 
+    * @param {*} catId 
+    * @returns 
+    */
+    function fctFiltre (elem,catId) {
+        const btn = document.querySelectorAll("button[id^='btn_']")//recuperer TOUS les boutons du html et pas seulement le 1er element
+        for (let i = 0; i < btn.length ; i++){ // parcours mon tableau qui contient les boutons 
+            if (elem.Id === btn[i].id){ // Si l'ID du bouton cliquer est egal a l'ID du bouton qu'on compare alors on change la couleur de fond et de texte
+                elem.setAttribute(`style`,`background-color:#1D6154 ;color:white`)
+                
+            }else{// Sinon on enleve l'attibut style , qui remet le bouton par defaut 
+                btn[i].removeAttribute("style")
+            }
+        }
+        if(catId === 0){ 
+            displayWorks(objWorks)
+            return false
+        }
+        const worksFiltered = objWorks.filter((data)=>{
+            return data.categoryId === catId
+        })
+        displayWorks(worksFiltered)
     }
 
     /**ColorNav()
@@ -97,8 +115,8 @@
             fetch(url) // Requete GET par defauts
                 .then( response => response.json() )
                 .then((response) => {
-                    displayWorks(response) // Appelle la fonction displayWorks
-                    fctFiltre("button[id^='btn_']",response) // appelle de la fonction fctFiltre + selecteur css pour preciser un button 
+                    objWorks = response // Attribue la reponse de l'API à objWorks 
+                    displayWorks(objWorks) // Appelle la fonction displayWorks
                 })
                 .catch( (error) => console.log("Erreur : "+error))            
         }catch{
